@@ -8,7 +8,8 @@
     "license": "LPL-1.02",
     "require": {
         "flarum/core": "^1.2.0",
-        "ziiven/flarum-daily-check-in": "*"
+        "ziiven/flarum-daily-check-in": "*",
+        "imdong/flarum-ext-buy-doorman": "*"
     },
     "authors": [
         {

@@ -11,3 +11,6 @@ mattoid-daily-check-in-history:
       max-supplementary-checkin: 最大补签数
       span-day-checkin: 允许跨天补签
       allow-supplementary-check-in: 允许补签
+      consumption: 消费
+      reward-money: 补签奖励
+      reward-money-requirement: 需要 <code>antoinefr/flarum-ext-money</code> 扩展

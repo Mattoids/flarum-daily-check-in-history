@@ -13,6 +13,18 @@ app.initializers.add('mattoid-daily-check-in-history', () => {
       label: app.translator.trans('mattoid-daily-check-in-history.admin.settings.span-day-checkin'),
       type: 'switch',
     })
+    .registerSetting({
+      setting: 'mattoid-forum-checkin.reward-money',
+      label: app.translator.trans('mattoid-daily-check-in-history.admin.settings.reward-money'),
+      help: app.translator.trans('mattoid-daily-check-in-history.admin.settings.reward-money-requirement'),
+      type: 'number',
+    })
+    .registerSetting({
+      setting: 'mattoid-forum-checkin.consumption',
+      label: app.translator.trans('mattoid-daily-check-in-history.admin.settings.consumption'),
+      help: app.translator.trans('mattoid-daily-check-in-history.admin.settings.reward-money-requirement'),
+      type: 'number',
+    })
     .registerPermission(
       {
         icon: 'fas fa-id-card',

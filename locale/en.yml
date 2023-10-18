@@ -11,4 +11,6 @@ mattoid-daily-check-in-history:
       max-supplementary-checkin: max supplementary checkin
       span-day-checkin: span day checkin
       allow-supplementary-check-in: allow supplementary checkin
-
+      consumption: consumption
+      reward-money: reward money
+      reward-money-requirement: Requires the <code>antoinefr/flarum-ext-money</code> extension

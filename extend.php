@@ -10,6 +10,9 @@
  */
 
 use Flarum\Extend;
+use Mattoid\CheckinHistory\Middleware\UserAuthMiddleware;
+use Ziven\checkin\Event\checkinUpdated;
+use Mattoid\CheckinHistory\Listeners\DoCheckinHistory;
 
 return [
     (new Extend\Frontend('forum'))
@@ -20,5 +23,7 @@ return [
         ->css(__DIR__.'/less/admin.less'),
     new Extend\Locales(__DIR__.'/locale'),
 
-    (new Extend\Middleware("api"))->add(Mattoid\CheckinHistory\Middleware\doCheckinMiddleware::class),
+    (new Extend\Middleware("api"))->add(UserAuthMiddleware::class),
+
+    (new Extend\Event())->listen(checkinUpdated::class, [DoCheckinHistory::class, 'checkinHistory']),
 ];
