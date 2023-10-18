@@ -1,7 +1,7 @@
 {
     "name": "@mattoid/daily-check-in-history",
     "private": true,
-    "version": "0.0.0",
+    "version": "1.0.0",
     "devDependencies": {
         "flarum-webpack-config": "^2.0.0",
         "webpack": "^5.65.0",

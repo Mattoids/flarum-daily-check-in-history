@@ -1,5 +1,5 @@
 {
-    "name": "mattoid/daily-check-in-history",
+    "name": "mattoid/flarum-daily-check-in-history",
     "description": "daily check in history",
     "keywords": [
         "flarum"
@@ -7,7 +7,8 @@
     "type": "flarum-extension",
     "license": "LPL-1.02",
     "require": {
-        "flarum/core": "^1.2.0"
+        "flarum/core": "^1.2.0",
+        "ziiven/flarum-daily-check-in": "*"
     },
     "authors": [
         {

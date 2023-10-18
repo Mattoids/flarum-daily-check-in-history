@@ -8,7 +8,6 @@ mattoid-daily-check-in-history:
     try-again-later: 请稍后再试
   admin:
     settings:
-      max-supplementary-checkin: max supplementary checkin
-      span-day-checkin: span day checkin
-      allow-supplementary-check-in: allow supplementary checkin
-
+      max-supplementary-checkin: 最大补签数
+      span-day-checkin: 允许跨天补签
+      allow-supplementary-check-in: 允许补签
