@@ -9,6 +9,7 @@
 
 namespace Mattoid\CheckinHistory\Middleware;
 
+use Flarum\User\User;
 use Illuminate\Mail\Transport\LogTransport;
 use Mattoid\CheckinHistory\Model\UserCheckinHistory;
 use Psr\Http\Message\ResponseInterface;
@@ -27,11 +28,16 @@ class doCheckinMiddleware extends LogTransport implements MiddlewareInterface
             && $response->getStatusCode() === 200 && isset($request->getParsedBody()["data"]['attributes']['canCheckin'])
             && isset($request->getParsedBody()["data"]['attributes']['totalContinuousCheckIn'])) {
 
+            $result = json_decode($response->getBody(), true);
+
+            $user = User::query()->find($result['data']['id']);
+
             $history = new UserCheckinHistory();
-            $history->user_id = 1;
+            $history->user_id = $result['data']['id'];
             $history->last_checkin_date = date("Y-m-d");
-            $history->total_checkin_count = 1;
-            $history->total_continuous_checkin_count = 1;
+            $history->total_checkin_count = $user->total_checkin_count;
+            $history->total_continuous_checkin_count = $result['data']['attributes']['totalContinuousCheckIn'];
+            $history->last_checkin_time = $result['data']['attributes']['lastCheckinTime'];
             $history->save();
         }
 
