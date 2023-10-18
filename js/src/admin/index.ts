@@ -14,6 +14,12 @@ app.initializers.add('mattoid-daily-check-in-history', () => {
       type: 'switch',
     })
     .registerSetting({
+      setting: 'mattoid-forum-checkin.checkin-range',
+      help: app.translator.trans('mattoid-daily-check-in-history.admin.settings.checkin-range-requirement'),
+      label: app.translator.trans('mattoid-daily-check-in-history.admin.settings.checkin-range'),
+      type: 'number',
+    })
+    .registerSetting({
       setting: 'mattoid-forum-checkin.reward-money',
       label: app.translator.trans('mattoid-daily-check-in-history.admin.settings.reward-money'),
       help: app.translator.trans('mattoid-daily-check-in-history.admin.settings.reward-money-requirement'),
@@ -24,6 +30,14 @@ app.initializers.add('mattoid-daily-check-in-history', () => {
       label: app.translator.trans('mattoid-daily-check-in-history.admin.settings.consumption'),
       help: app.translator.trans('mattoid-daily-check-in-history.admin.settings.reward-money-requirement'),
       type: 'number',
+    })
+    .registerSetting({
+      setting: 'mattoid-forum-checkin.consumption',
+      label: app.translator.trans('mattoid-daily-check-in-history.admin.settings.consumption'),
+      help: app.translator.trans('mattoid-daily-check-in-history.admin.settings.reward-money-requirement'),
+      type: 'select',
+      options: {0 : "小药店", 1 : "用户中心（日历）"},
+      default: 0
     })
     .registerPermission(
       {

@@ -8,9 +8,11 @@ mattoid-daily-check-in-history:
     try-again-later: 请稍后再试
   admin:
     settings:
-      max-supplementary-checkin: 最大补签数
+      max-supplementary-checkin: 最大连续补签数
       span-day-checkin: 允许跨天补签
       allow-supplementary-check-in: 允许补签
-      consumption: 消费
+      consumption: 补签花费
       reward-money: 补签奖励
       reward-money-requirement: 需要 <code>antoinefr/flarum-ext-money</code> 扩展
+      checkin-range: 补签范围
+      checkin-range-requirement: 允许补签设置天数以内的签到
