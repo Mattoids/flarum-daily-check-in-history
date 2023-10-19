@@ -17,7 +17,8 @@ use Mattoid\CheckinHistory\Listeners\DoCheckinHistory;
 return [
     (new Extend\Frontend('forum'))
         ->js(__DIR__.'/js/dist/forum.js')
-        ->css(__DIR__.'/less/forum.less'),
+        ->css(__DIR__.'/less/forum.less')
+        ->route('/u/{username}/checkin/history', 'mattoid-daily-check-in-history.forum.page.link-name'),
     (new Extend\Frontend('admin'))
         ->js(__DIR__.'/js/dist/admin.js')
         ->css(__DIR__.'/less/admin.less'),
