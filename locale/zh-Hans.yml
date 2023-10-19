@@ -1,11 +1,8 @@
 mattoid-daily-check-in-history:
   forum:
-    check-in: 签到
-    checked-in-day: 已签到{count}天
-    checked-in-days: 已签到{count}天
-    check-in-success: 签到成功
-    check-in-failed: 签到失败
-    try-again-later: 请稍后再试
+    page:
+      link-name: 签到历史
+      title: 签到历史
   admin:
     settings:
       max-supplementary-checkin: 最大连续补签数
