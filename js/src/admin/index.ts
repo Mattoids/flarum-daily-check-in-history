@@ -32,9 +32,9 @@ app.initializers.add('mattoid-daily-check-in-history', () => {
       type: 'number',
     })
     .registerSetting({
-      setting: 'mattoid-forum-checkin.consumption',
-      label: app.translator.trans('mattoid-daily-check-in-history.admin.settings.consumption'),
-      help: app.translator.trans('mattoid-daily-check-in-history.admin.settings.reward-money-requirement'),
+      setting: 'mattoid-forum-checkin.admin.settings.checkin-position',
+      label: app.translator.trans('mattoid-daily-check-in-history.admin.settings.checkin-position'),
+      help: app.translator.trans('mattoid-daily-check-in-history.admin.settings.checkin-position-requirement'),
       type: 'select',
       options: {0 : "小药店", 1 : "用户中心（日历）"},
       default: 0

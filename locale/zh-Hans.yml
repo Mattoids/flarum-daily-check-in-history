@@ -3,6 +3,10 @@ mattoid-daily-check-in-history:
     page:
       link-name: 签到历史
       title: 签到历史
+    modal:
+      checkin: 补签
+      supplement-checkin-desc: 确认要补签吗？
+      submit: 确认
   admin:
     settings:
       max-supplementary-checkin: 最大连续补签数
@@ -13,3 +17,5 @@ mattoid-daily-check-in-history:
       reward-money-requirement: 需要 <code>antoinefr/flarum-ext-money</code> 扩展
       checkin-range: 补签范围
       checkin-range-requirement: 允许补签设置天数以内的签到
+      checkin-position: 补签位置
+      checkin-position-requirement: 补签功能在以下位置进行操作，如果选择小药店，则不展示补签卡商品。若选择日历，则可以使用补签卡或者扣除费用等方式

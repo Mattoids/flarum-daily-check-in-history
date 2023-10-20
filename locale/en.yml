@@ -3,6 +3,10 @@ mattoid-daily-check-in-history:
     page:
       link-name: checkin history
       title: CheckinHistory
+    modal:
+      checkin: checkin
+      supplement-checkin-desc: Are you sure you want to sign a new one?
+      submit: yes
   admin:
     settings:
       max-supplementary-checkin: max continuous supplementary checkin
@@ -13,3 +17,5 @@ mattoid-daily-check-in-history:
       reward-money-requirement: Requires the <code>antoinefr/flarum-ext-money</code> extension
       checkin-range: supplementary checkin range
       checkin-range-requirement: Allow supplementary sign-in within the set number of days
+      checkin-position: checkin position
+      checkin-position-requirement: The replenishment function operates in the following locations. If a small pharmacy is selected, the replenishment card products will not be displayed. If you choose a calendar, you can use methods such as card replacement or deduction of expenses

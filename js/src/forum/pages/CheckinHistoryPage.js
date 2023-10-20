@@ -1,7 +1,10 @@
 import UserPage from 'flarum/forum/components/UserPage';
 import dynamicallyLoadLib from "../utils/dynamicallyLoadLib";
+import SupplementCheckinModal from "../modal/SupplementCheckinModal";
 
 export default class CheckinHistoryPage extends UserPage {
+
+  // calendar = null;
 
   // 初始化时候，方便放一些准备用的数据，或者用来网络请求。此时可以拿到 vnode，但是不一定拿得到真实 DOM，所以这里不推荐进行相关的 DOM 操作，比如：vnode.dom。
   oninit(vnode) {
@@ -61,9 +64,9 @@ export default class CheckinHistoryPage extends UserPage {
     await dynamicallyLoadLib(['fullcalendarLocales', 'fullcalendarDayGrid', 'fullcalendarInteraction', 'fullcalendarList']);
 
     const calendarEl = document.getElementById('calendar');
-    const openModal = this.openCreateModal.bind(this);
+    const openModal = await this.openCreateModal.bind(this);
 
-    const calendar = new FullCalendar.Calendar(calendarEl, {
+    this.calendar = new FullCalendar.Calendar(calendarEl, {
       locale: app.translator.getLocale(),
       allDayText: "今天",
       initialView: 'dayGridMonth',
@@ -72,11 +75,16 @@ export default class CheckinHistoryPage extends UserPage {
       },
       events: (info, successCb, failureCb) => this.getData(info, successCb, failureCb)
     });
-    calendar.render();
+    this.calendar.render();
   }
 
-  openCreateModal(info) {
-    console.log(info)
+  async openCreateModal(info) {
+
+    app.modal.show(SupplementCheckinModal, {
+      callback: () => {
+        location.reload();
+      }
+    })
   }
 
 }
