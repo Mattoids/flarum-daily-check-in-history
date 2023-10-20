@@ -27,4 +27,7 @@ return [
     (new Extend\Middleware("api"))->add(UserAuthMiddleware::class),
 
     (new Extend\Event())->listen(checkinUpdated::class, [DoCheckinHistory::class, 'checkinHistory']),
+
+    (new Extend\Routes('api'))
+        ->get('/checkin/history', 'checkin.history', Mattoid\CheckinHistory\Api\Controller\ListCheckinHistoryController::class)
 ];
