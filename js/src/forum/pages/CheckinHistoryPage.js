@@ -10,11 +10,7 @@ export default class CheckinHistoryPage extends UserPage {
   }
 
   content() {
-    if (
-      app.session.user &&
-      (app.session.user.canViewWarnings() || (this.user.id() === app.session.user.id() && this.user.visibleWarningCount() > 0))
-    ) {
-
+    if (app.session.user) {
       return (
         <div className="CheckinHistoryUserPage">
         </div>
