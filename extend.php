@@ -30,4 +30,5 @@ return [
 
     (new Extend\Routes('api'))
         ->get('/checkin/history', 'checkin.history', Mattoid\CheckinHistory\Api\Controller\ListCheckinHistoryController::class)
+        ->post('/supplement/checkin', 'supplement.checkin', Mattoid\CheckinHistory\Api\Controller\PostCheckinHistoryController::class)
 ];

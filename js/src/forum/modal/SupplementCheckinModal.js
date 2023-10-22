@@ -38,28 +38,17 @@ export default class SupplementCheckinModal extends Modal {
 
   async onsubmit(e) {
 
-    const history = {
-      userId: 1,
-    };
+    app.request({
+      method: 'POST',
+      url: app.forum.attribute('apiUrl') + '/supplement/checkin',
+      body: {
+        date: this.attrs.info.dateStr
+      }
+    })
+    .then((result) => {
+      console.log(result)
+    });
 
-    if (this.attrs.post) {
-      history.post = this.attrs.post;
-    }
-
-    app.store
-      .createRecord('checkin.history')
-      .save(history)
-      .then(this.hide.bind(this))
-      .then(
-        (this.successAlert = app.alerts.show(
-          { type: 'success' },
-          app.translator.trans('askvortsov-moderator-warnings.forum.warning_modal.confirmation_message')
-        ))
-      )
-      .then(this.attrs.callback)
-      .catch(() => {});
-
-
-    // this.hide();
+    this.hide();
   }
 }

@@ -79,12 +79,7 @@ export default class CheckinHistoryPage extends UserPage {
   }
 
   async openCreateModal(info) {
-
-    app.modal.show(SupplementCheckinModal, {
-      callback: () => {
-        location.reload();
-      }
-    })
+    app.modal.show(SupplementCheckinModal, {info})
   }
 
 }
