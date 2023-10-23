@@ -40,6 +40,7 @@ class CheckinEvent
             throw new ValidationException(['message' => $this->translator->trans('mattoid-daily-check-in-history.api.error.insufficient-balance')]);
         }
 
+        app('log')->info($checkinCount);
         // 操作签到
         if ($user->checkin_card > 0) {
             // 有签到卡则扣除签到卡
