@@ -11,19 +11,39 @@
 
 namespace Mattoid\CheckinHistory\Api\Controller;
 
-use Flarum\Api\Controller\AbstractListController;
+use DateTime;
+use Flarum\Api\Controller\AbstractCreateController;
+use Flarum\Foundation\ValidationException;
 use Flarum\Http\RequestUtil;
 use Flarum\User\Exception\PermissionDeniedException;
+use Illuminate\Support\Arr;
 use Mattoid\CheckinHistory\Api\Serializer\CheckinHistorySerializer;
+use Flarum\Settings\SettingsRepositoryInterface;
+use Illuminate\Contracts\Events\Dispatcher;
+use Mattoid\CheckinHistory\Event\CheckinEvent;
 use Mattoid\CheckinHistory\Model\UserCheckinHistory;
 use Psr\Http\Message\ServerRequestInterface;
 use Tobscure\JsonApi\Document;
+use Flarum\Locale\Translator;
 
-class PostCheckinHistoryController extends AbstractListController
+class PostCheckinHistoryController extends AbstractCreateController
 {
     public $serializer = CheckinHistorySerializer::class;
 
-    public $include = ['warnedUser', 'addedByUser', 'hiddenByUser', 'post', 'post.discussion', 'post.user'];
+    public $include = ['post', 'post.discussion', 'post.user', 'user'];
+
+    protected $translator;
+    protected $settings;
+    protected $events;
+    protected $event;
+
+    public function __construct(SettingsRepositoryInterface $settings, Dispatcher $events, Translator $translator, CheckinEvent $event)
+    {
+        $this->translator = $translator;
+        $this->settings = $settings;
+        $this->events = $events;
+        $this->event = $event;
+    }
 
     /**
      * Get the data to be serialized and assigned to the response document.
@@ -38,25 +58,79 @@ class PostCheckinHistoryController extends AbstractListController
     protected function data(ServerRequestInterface $request, Document $document)
     {
 
-        return $request->getUri();
-
         $actor = RequestUtil::getActor($request);
+        $userId = Arr::get($actor, 'id');
+        $checkinDate = Arr::get($request->getParsedBody(), 'date');
 
-        app('log')->info($actor);
-        app('log')->info($request->getBody());
-        app('log')->info($request->getAttributes());
-        app('log')->info($request->getQueryParams());
-        app('log')->info($request->getRequestTarget());
-        app('log')->info($request->getCookieParams());
-        app('log')->info($request->getMethod());
-        app('log')->info($request->getParsedBody());
-        app('log')->info($request->getServerParams());
-        app('log')->info($request->getUri());
-
-        if (!$actor->can('event.view')) {
-            return array();
+        if (!$actor->can('checkin.allowSupplementaryCheckIn')) {
+            throw new PermissionDeniedException();
         }
 
-        return true;
+        // 查询是否已补签
+        $historyResult = UserCheckinHistory::query()->where('user_id', $userId)->where('last_checkin_date', $checkinDate)->first();
+        if ($historyResult) {
+            throw new ValidationException(['message' => 'not_permission']);
+        }
+
+        $maxSupplementaryCheckin = $this->settings->get('mattoid-forum-checkin.max-supplementary-checkin');
+        $checkinPosition = $this->settings->get('mattoid-forum-checkin.checkin-position');
+        $spanDayCheckin = $this->settings->get('mattoid-forum-checkin.span-day-checkin');
+        $checkinRange = $this->settings->get('mattoid-forum-checkin.checkin-range');
+
+        // 小药店签到则系统自动获取最后一次未签到数据进行补签
+        if (isset($checkinPosition) && $checkinPosition == 0) {
+            $userCheckinHistory = [];
+            if (isset($checkinRange) && $checkinRange) {
+                $rangeEndData = date('Y-m-d',strtotime("-{$checkinRange} days",strtotime(date('Y-m-d'))));
+                $userCheckinHistory = UserCheckinHistory::query()->where('user_id', $userId)->where('last_checkin_date', '>', $rangeEndData)->orderByDesc("last_checkin_date")->get();
+            } else {
+                $userCheckinHistory = UserCheckinHistory::query()->where('user_id', $userId)->orderByDesc("last_checkin_date")->get();
+            }
+
+            // 查找最近一次漏签数据
+            foreach ($userCheckinHistory as $key => $value) {
+                $checkinStart = new DateTime($value->last_checkin_date);
+                $checkinEnd = new DateTime(date('Y-m-d',strtotime("-{$key} days",strtotime(date('Y-m-d')))));
+
+                if ($checkinStart->diff($checkinEnd)->days > 0) {
+                    $checkinDate = $value->last_checkin_date;
+                }
+            }
+        }
+
+        // 连续补签限制
+        $checkinEndData = date('Y-m-d',strtotime("-{$maxSupplementaryCheckin} days",strtotime($checkinDate)));
+        $checkinCount = UserCheckinHistory::query()->where('user_id', $userId)->where("last_checkin_date" , '>', $checkinDate)
+            ->where('last_checkin_date', '<=', $checkinEndData)->where('type', 1)->count();
+        if ($checkinCount >= $maxSupplementaryCheckin) {
+            throw new ValidationException(['message' => $this->translator->trans('mattoid-daily-check-in-history.api.error.max-supplementary-checkin', ['day' => $maxSupplementaryCheckin])]);
+        }
+
+        // 签到范围
+        $startDate = new DateTime($checkinDate);
+        $endDate = new DateTime(date('Y-m-d'));
+        $diffDay = $endDate->diff($startDate)->days;
+        if (isset($checkinRange) && $diffDay > $checkinRange) {
+            throw new ValidationException(['message' => $this->translator->trans('mattoid-daily-check-in-history.api.error.checkin-range', ['day' => $diffDay])]);
+        }
+
+        // 不允许跨天签到
+        $totalContinuousCheckinCountHistory = 0;
+        $yesterday = date('Y-m-d',strtotime("-1 days",strtotime($checkinDate)));
+        $historyResult = UserCheckinHistory::query()->where('user_id', $userId)->where('last_checkin_date', $yesterday)->first();
+        if ($historyResult) {
+            // 需要确认是连续签到，并且补签的前一天和后一天都没有漏签
+            $signedinCount = UserCheckinHistory::query()->where('user_id', $userId)->where('last_checkin_date', '>', $checkinDate)->count();
+            if (isset($spanDayCheckin) && $spanDayCheckin == 1 && $signedinCount < $diffDay) {
+                throw new ValidationException(['message' => $this->translator->trans('mattoid-daily-check-in-history.api.error.span-day-checkin', ['date' => $checkinDate])]);
+            }
+            if ($signedinCount >= $diffDay) {
+                $totalContinuousCheckinCountHistory = $historyResult->total_continuous_checkin_count;
+            }
+        }
+
+        $history = $this->event->supplementCheckin($actor, $checkinDate, $totalContinuousCheckinCountHistory);
+
+        return $history;
     }
 }

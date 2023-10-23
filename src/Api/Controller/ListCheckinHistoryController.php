@@ -14,6 +14,7 @@ namespace Mattoid\CheckinHistory\Api\Controller;
 use Flarum\Api\Controller\AbstractListController;
 use Flarum\Http\RequestUtil;
 use Flarum\User\Exception\PermissionDeniedException;
+use Illuminate\Support\Arr;
 use Mattoid\CheckinHistory\Api\Serializer\CheckinHistorySerializer;
 use Mattoid\CheckinHistory\Model\UserCheckinHistory;
 use Psr\Http\Message\ServerRequestInterface;
@@ -40,14 +41,16 @@ class ListCheckinHistoryController extends AbstractListController
 
         $actor = RequestUtil::getActor($request);
 
-        if (!$actor->can('event.view')) {
+        if (!$actor->can('checkin.allowSupplementaryCheckIn')) {
             return array();
         }
 
-        $userId = $request->getAttributes()['actor']['id'];
+        $userId = Arr::get($actor, 'id');
+        $startDate = Arr::get($request->getQueryParams(), 'start');
+        $endDate = Arr::get($request->getQueryParams(), 'end');
 
-        return UserCheckinHistory::where('user_id', $userId)->where('last_checkin_date', ">=", $request->getQueryParams()['start'])
-            ->where('last_checkin_date', "<=", $request->getQueryParams()['end'])->get();
+        return UserCheckinHistory::where('user_id', $userId)->where('last_checkin_date', ">=", $startDate)
+            ->where('last_checkin_date', "<=", $endDate)->get();
 
     }
 }

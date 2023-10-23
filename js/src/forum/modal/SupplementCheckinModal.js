@@ -49,6 +49,6 @@ export default class SupplementCheckinModal extends Modal {
       console.log(result)
     });
 
-    this.hide();
+    // this.hide();
   }
 }

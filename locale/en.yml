@@ -10,7 +10,9 @@ mattoid-daily-check-in-history:
   admin:
     settings:
       max-supplementary-checkin: max continuous supplementary checkin
+      max-supplementary-checkin-requirement: The maximum number of consecutive days allowed for signing in, and if there is a date that has already been signed in between, the number of consecutive days for signing in will be recalculated
       span-day-checkin: span day checkin
+      span-day-checkin-requirement: After opening, no unsigned date data is allowed after the supplementary signature date
       allow-supplementary-check-in: allow supplementary checkin
       consumption: consumption
       reward-money: reward money
@@ -19,3 +21,8 @@ mattoid-daily-check-in-history:
       checkin-range-requirement: Allow supplementary sign-in within the set number of days
       checkin-position: checkin position
       checkin-position-requirement: The replenishment function operates in the following locations. If a small pharmacy is selected, the replenishment card products will not be displayed. If you choose a calendar, you can use methods such as card replacement or deduction of expenses
+  api:
+    error:
+      checkin-range: 补签请求超出有效范围，不允许补签超过{day}天的记录
+      max-supplementary-checkin: 连续补签超出限制，允许最大连续补签{day}天
+      span-day-checkin: {date}之前有未签到记录，不允许跨天签到

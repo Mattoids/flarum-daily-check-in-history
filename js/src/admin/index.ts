@@ -4,12 +4,14 @@ app.initializers.add('mattoid-daily-check-in-history', () => {
 
   app.extensionData.for("mattoid-daily-check-in-history")
     .registerSetting({
-      setting: 'mattoid-forum-checkin.maxSupplementaryCheckin',
+      setting: 'mattoid-forum-checkin.max-supplementary-checkin',
+      help: app.translator.trans('mattoid-daily-check-in-history.admin.settings.max-supplementary-checkin-requirement'),
       label: app.translator.trans('mattoid-daily-check-in-history.admin.settings.max-supplementary-checkin'),
       type: 'number',
     })
     .registerSetting({
-      setting: 'mattoid-forum-checkin.spanDayCheckin',
+      setting: 'mattoid-forum-checkin.span-day-checkin',
+      help: app.translator.trans('mattoid-daily-check-in-history.admin.settings.span-day-checkin-requirement'),
       label: app.translator.trans('mattoid-daily-check-in-history.admin.settings.span-day-checkin'),
       type: 'switch',
     })
@@ -32,7 +34,7 @@ app.initializers.add('mattoid-daily-check-in-history', () => {
       type: 'number',
     })
     .registerSetting({
-      setting: 'mattoid-forum-checkin.admin.settings.checkin-position',
+      setting: 'mattoid-forum-checkin.checkin-position',
       label: app.translator.trans('mattoid-daily-check-in-history.admin.settings.checkin-position'),
       help: app.translator.trans('mattoid-daily-check-in-history.admin.settings.checkin-position-requirement'),
       type: 'select',

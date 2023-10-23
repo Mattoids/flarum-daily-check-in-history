@@ -10,7 +10,9 @@ mattoid-daily-check-in-history:
   admin:
     settings:
       max-supplementary-checkin: 最大连续补签数
+      max-supplementary-checkin-requirement: 允许签到最大连续补签的天数，若中间有已签到的日期则重新计算连续补签天数
       span-day-checkin: 允许跨天补签
+      span-day-checkin-requirement: 开启后，补签日期之后不允许有未签到的日期数据
       allow-supplementary-check-in: 允许补签
       consumption: 补签花费
       reward-money: 补签奖励
@@ -19,3 +21,8 @@ mattoid-daily-check-in-history:
       checkin-range-requirement: 允许补签设置天数以内的签到
       checkin-position: 补签位置
       checkin-position-requirement: 补签功能在以下位置进行操作，如果选择小药店，则不展示补签卡商品。若选择日历，则可以使用补签卡或者扣除费用等方式
+  api:
+    error:
+      checkin-range: 补签请求超出有效范围，不允许补签超过{day}天的记录
+      max-supplementary-checkin: 连续补签超出限制，允许最大连续补签{day}天
+      span-day-checkin: {date}之前有未签到记录，不允许跨天签到
