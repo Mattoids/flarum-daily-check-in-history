@@ -34,6 +34,18 @@ app.initializers.add('mattoid-daily-check-in-history', () => {
       type: 'number',
     })
     .registerSetting({
+      setting: 'mattoid-forum-checkin.checkin-increase',
+      label: app.translator.trans('mattoid-daily-check-in-history.admin.settings.checkin-increase'),
+      help: app.translator.trans('mattoid-daily-check-in-history.admin.settings.checkin-increase-requirement'),
+      type: 'number',
+    })
+    .registerSetting({
+      setting: 'mattoid-forum-checkin.checkin-card',
+      help: app.translator.trans('mattoid-daily-check-in-history.admin.settings.checkin-card-requirement'),
+      label: app.translator.trans('mattoid-daily-check-in-history.admin.settings.checkin-card'),
+      type: 'switch',
+    })
+    .registerSetting({
       setting: 'mattoid-forum-checkin.checkin-position',
       label: app.translator.trans('mattoid-daily-check-in-history.admin.settings.checkin-position'),
       help: app.translator.trans('mattoid-daily-check-in-history.admin.settings.checkin-position-requirement'),

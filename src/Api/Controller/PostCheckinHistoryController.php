@@ -127,7 +127,7 @@ class PostCheckinHistoryController extends AbstractCreateController
             $totalContinuousCheckinCountHistory = $historyResult->total_continuous_checkin_count;
         }
 
-        $history = $this->event->supplementCheckin($actor, $checkinDate, $totalContinuousCheckinCountHistory);
+        $history = $this->event->supplementCheckin($actor, $checkinDate, $totalContinuousCheckinCountHistory, $checkinCount);
 
         return $history;
     }

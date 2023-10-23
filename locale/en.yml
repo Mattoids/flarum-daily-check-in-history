@@ -5,7 +5,7 @@ mattoid-daily-check-in-history:
       title: CheckinHistory
     modal:
       checkin: checkin
-      supplement-checkin-desc: Are you sure you want to sign a new one?
+      supplement-checkin-desc: Are you sure you want to supplement the check-in for {dateStr}?
       submit: yes
   admin:
     settings:
@@ -21,9 +21,14 @@ mattoid-daily-check-in-history:
       checkin-range-requirement: Allow supplementary sign-in within the set number of days
       checkin-position: checkin position
       checkin-position-requirement: The replenishment function operates in the following locations. If a small pharmacy is selected, the replenishment card products will not be displayed. If you choose a calendar, you can use methods such as card replacement or deduction of expenses
+      checkin-card: Only for supplementary card signing
+      checkin-card-requirement: After opening, it will not consume money, but when there is insufficient supplementary cards, supplementary signing is not allowed
+      checkin-increase: Increment of supplementary signing expenses(%)
+      checkin-increase-requirement: When users continuously sign in, the fee for each check-in will be higher than the previous one. This configuration is invalid for make-up cards!
   api:
     error:
-      checkin-range: 补签请求超出有效范围，不允许补签超过{day}天的记录
-      max-supplementary-checkin: 连续补签超出限制，允许最大连续补签{day}天
-      span-day-checkin: 签到失败，{date}之前有未签到记录，不允许跨天签到
+      checkin-range: The supplementary signature request exceeds the valid range, and it is not allowed to supplement records that exceed {day} days
+      max-supplementary-checkin: Continuous supplementary signing exceeds the limit, allowing a maximum of {day} consecutive supplementary signing days
+      span-day-checkin: Sign in failed. There were no sign in records before {date}, cross day sign in is not allowed
       insufficient-balance: Insufficient Balance, Sign in failed
+      insufficient-checkin-card: Insufficient supplementary card signing

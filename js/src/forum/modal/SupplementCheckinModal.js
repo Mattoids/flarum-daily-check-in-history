@@ -22,9 +22,9 @@ export default class SupplementCheckinModal extends Modal {
 
   content() {
     return [
-      <div className="Modal-body">
+      <div className="Modal-body" style="text-align: center;">
         <div className="Form-group">
-          <label className="label">{app.translator.trans('mattoid-daily-check-in-history.forum.modal.supplement-checkin-desc')}</label>
+          <label className="label">{app.translator.trans('mattoid-daily-check-in-history.forum.modal.supplement-checkin-desc', {"dateStr": this.attrs.info.dateStr})}</label>
         </div>
         <div className="Form-group">
           <Button type="submit" className="Button Button--primary PollModal-SubmitButton" loading={this.loading}>

@@ -21,18 +21,23 @@ class CheckinEvent
         $this->translator = $translator;
     }
 
-    public function supplementCheckin(User $user, String $checkinDate, int $totalContinuousCheckinCountHistory = 0): UserCheckinHistory {
+    public function supplementCheckin(User $user, String $checkinDate, int $totalContinuousCheckinCountHistory = 0, int $checkinCount = 0): UserCheckinHistory {
 
         $rewardMoney = (double)$this->settings->get('mattoid-forum-checkin.reward-money') ?? 0;
         $consumption = (double)$this->settings->get('mattoid-forum-checkin.consumption') ?? 0;
+        $checkinCard = (double)$this->settings->get('mattoid-forum-checkin.checkin-card') ?? 0;
+        $checkinIncrease = (double)$this->settings->get('mattoid-forum-checkin.checkin-increase') ?? 0;
         $spanDayCheckin = $this->settings->get('mattoid-forum-checkin.span-day-checkin');
 
         $userId = Arr::get($user, 'id');
         $totalCheckinCount = Arr::get($user, 'total_checkin_count');
         $totalContinuousCheckinCount = Arr::get($user, 'total_continuous_checkin_count');
 
+        if ($checkinCard > 0 && $user->checkin_card <= 0) {
+            throw new ValidationException(['message' => $this->translator->trans('mattoid-daily-check-in-history.api.error.insufficient-checkin-card')]);
+        }
         if ($user->checkin_card <= 0 && $user->money < ($consumption - $rewardMoney)) {
-            throw new ValidationException(['message' => $this->translator->trans('mattoid-daily-check-in-history.api.error.span-day-checkin')]);
+            throw new ValidationException(['message' => $this->translator->trans('mattoid-daily-check-in-history.api.error.insufficient-balance')]);
         }
 
         // 操作签到
@@ -41,7 +46,7 @@ class CheckinEvent
             $user->checkin_card -= 1;
         } else {
             // 没有签到卡直接扣除金额
-            $user->money -= $consumption;
+            $user->money -= $consumption * ($checkinIncrease / 100 * $checkinCount + 1);
         }
         $user->money += $rewardMoney;
         $user->total_checkin_count=$totalCheckinCount + 1;

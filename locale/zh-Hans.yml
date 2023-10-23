@@ -5,7 +5,7 @@ mattoid-daily-check-in-history:
       title: 签到历史
     modal:
       checkin: 补签
-      supplement-checkin-desc: 确认要补签吗？
+      supplement-checkin-desc: 确认要补 {dateStr} 的签到吗？
       submit: 确认
   admin:
     settings:
@@ -21,9 +21,14 @@ mattoid-daily-check-in-history:
       checkin-range-requirement: 允许补签设置天数以内的签到
       checkin-position: 补签位置
       checkin-position-requirement: 补签功能在以下位置进行操作，如果选择小药店，则不展示补签卡商品。若选择日历，则可以使用补签卡或者扣除费用等方式
+      checkin-card: 仅限补签卡
+      checkin-card-requirement: 开启后将不消耗金钱，但补签卡不足时不允许补签
+      checkin-increase: 补签花费增量(%)
+      checkin-increase-requirement: 用户连续补签时，每次签到会比前一次的收费更高。该配置对补签卡无效！（计算公式：补签扣费 = 连续补签次数 * 补签花费 * (1 + 补签花费增量 / 100)）
   api:
     error:
       checkin-range: 补签请求超出有效范围，不允许补签超过{day}天的记录
       max-supplementary-checkin: 连续补签超出限制，允许最大连续补签{day}天
       span-day-checkin: 签到失败，{date}之前有未签到记录，不允许跨天签到
       insufficient-balance: 余额不足，补签失败
+      insufficient-checkin-card: 补签卡不足
