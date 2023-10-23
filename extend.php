@@ -11,8 +11,8 @@
 
 use Flarum\Extend;
 use Mattoid\CheckinHistory\Middleware\UserAuthMiddleware;
-use Ziven\checkin\Event\updatedEvent;
 use Mattoid\CheckinHistory\Listeners\DoCheckinHistory;
+use Ziven\checkin\Event\checkinUpdated;
 
 return [
     (new Extend\Frontend('forum'))
@@ -26,7 +26,7 @@ return [
 
     (new Extend\Middleware("api"))->add(UserAuthMiddleware::class),
 
-    (new Extend\Event())->listen(updatedEvent::class, [DoCheckinHistory::class, 'checkinHistory']),
+    (new Extend\Event())->listen(checkinUpdated::class, [DoCheckinHistory::class, 'checkinHistory']),
 
     (new Extend\Routes('api'))
         ->get('/checkin/history', 'checkin.history', Mattoid\CheckinHistory\Api\Controller\ListCheckinHistoryController::class)

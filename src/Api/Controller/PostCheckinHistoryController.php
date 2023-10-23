@@ -72,10 +72,10 @@ class PostCheckinHistoryController extends AbstractCreateController
             throw new ValidationException(['message' => 'not_permission']);
         }
 
-        $maxSupplementaryCheckin = $this->settings->get('mattoid-forum-checkin.max-supplementary-checkin');
-        $checkinPosition = $this->settings->get('mattoid-forum-checkin.checkin-position');
-        $spanDayCheckin = $this->settings->get('mattoid-forum-checkin.span-day-checkin');
-        $checkinRange = $this->settings->get('mattoid-forum-checkin.checkin-range');
+        $maxSupplementaryCheckin = $this->settings->get('mattoid-forum-checkin.max-supplementary-checkin') ?? 0;
+        $checkinPosition = $this->settings->get('mattoid-forum-checkin.checkin-position') ?? 0;
+        $spanDayCheckin = $this->settings->get('mattoid-forum-checkin.span-day-checkin') ?? 0;
+        $checkinRange = $this->settings->get('mattoid-forum-checkin.checkin-range') ?? 0;
 
         // 小药店签到则系统自动获取最后一次未签到数据进行补签
         if (isset($checkinPosition) && $checkinPosition == 0) {
@@ -99,10 +99,10 @@ class PostCheckinHistoryController extends AbstractCreateController
         }
 
         // 连续补签限制
-        $checkinEndData = date('Y-m-d',strtotime("-{$maxSupplementaryCheckin} days",strtotime($checkinDate)));
+        $checkinEndData = date('Y-m-d',strtotime("+{$maxSupplementaryCheckin} days",strtotime($checkinDate)));
         $checkinCount = UserCheckinHistory::query()->where('user_id', $userId)->where("last_checkin_date" , '>', $checkinDate)
             ->where('last_checkin_date', '<=', $checkinEndData)->where('type', 1)->count();
-        if ($checkinCount >= $maxSupplementaryCheckin) {
+        if (isset($maxSupplementaryCheckin) && $maxSupplementaryCheckin > 0 && $checkinCount >= $maxSupplementaryCheckin) {
             throw new ValidationException(['message' => $this->translator->trans('mattoid-daily-check-in-history.api.error.max-supplementary-checkin', ['day' => $maxSupplementaryCheckin])]);
         }
 
@@ -110,23 +110,21 @@ class PostCheckinHistoryController extends AbstractCreateController
         $startDate = new DateTime($checkinDate);
         $endDate = new DateTime(date('Y-m-d'));
         $diffDay = $endDate->diff($startDate)->days;
-        if (isset($checkinRange) && $diffDay > $checkinRange) {
+        if (isset($checkinRange) && $checkinRange > 0 && $diffDay > $checkinRange) {
             throw new ValidationException(['message' => $this->translator->trans('mattoid-daily-check-in-history.api.error.checkin-range', ['day' => $diffDay])]);
         }
 
         // 不允许跨天签到
         $totalContinuousCheckinCountHistory = 0;
+        // 需要确认是连续签到，并且补签的前一天和后一天都没有漏签
+        $signedinCount = UserCheckinHistory::query()->where('user_id', $userId)->where('last_checkin_date', '>', $checkinDate)->count();
+        if (isset($spanDayCheckin) && !$spanDayCheckin && $signedinCount < $diffDay) {
+            throw new ValidationException(['message' => $this->translator->trans('mattoid-daily-check-in-history.api.error.span-day-checkin', ['date' => $checkinDate])]);
+        }
         $yesterday = date('Y-m-d',strtotime("-1 days",strtotime($checkinDate)));
         $historyResult = UserCheckinHistory::query()->where('user_id', $userId)->where('last_checkin_date', $yesterday)->first();
-        if ($historyResult) {
-            // 需要确认是连续签到，并且补签的前一天和后一天都没有漏签
-            $signedinCount = UserCheckinHistory::query()->where('user_id', $userId)->where('last_checkin_date', '>', $checkinDate)->count();
-            if (isset($spanDayCheckin) && $spanDayCheckin == 1 && $signedinCount < $diffDay) {
-                throw new ValidationException(['message' => $this->translator->trans('mattoid-daily-check-in-history.api.error.span-day-checkin', ['date' => $checkinDate])]);
-            }
-            if ($signedinCount >= $diffDay) {
-                $totalContinuousCheckinCountHistory = $historyResult->total_continuous_checkin_count;
-            }
+        if ($historyResult && $signedinCount >= $diffDay) {
+            $totalContinuousCheckinCountHistory = $historyResult->total_continuous_checkin_count;
         }
 
         $history = $this->event->supplementCheckin($actor, $checkinDate, $totalContinuousCheckinCountHistory);

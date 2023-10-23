@@ -25,4 +25,5 @@ mattoid-daily-check-in-history:
     error:
       checkin-range: 补签请求超出有效范围，不允许补签超过{day}天的记录
       max-supplementary-checkin: 连续补签超出限制，允许最大连续补签{day}天
-      span-day-checkin: {date}之前有未签到记录，不允许跨天签到
+      span-day-checkin: 签到失败，{date}之前有未签到记录，不允许跨天签到
+      insufficient-balance: 余额不足，补签失败

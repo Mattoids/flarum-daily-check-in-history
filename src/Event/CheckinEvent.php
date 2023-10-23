@@ -2,8 +2,9 @@
 
 namespace Mattoid\CheckinHistory\Event;
 
+use Flarum\Foundation\ValidationException;
+use Flarum\Locale\Translator;
 use Flarum\Settings\SettingsRepositoryInterface;
-use Flarum\User\Exception\PermissionDeniedException;
 use Flarum\User\User;
 use Illuminate\Support\Arr;
 use Mattoid\CheckinHistory\Model\UserCheckinHistory;
@@ -12,23 +13,31 @@ class CheckinEvent
 {
     public $user;
     protected $settings;
+    protected $translator;
 
-    public function __construct(SettingsRepositoryInterface $settings)
+    public function __construct(SettingsRepositoryInterface $settings, Translator $translator)
     {
         $this->settings = $settings;
+        $this->translator = $translator;
     }
 
     public function supplementCheckin(User $user, String $checkinDate, int $totalContinuousCheckinCountHistory = 0): UserCheckinHistory {
 
-        $rewardMoney = $this->settings->get('mattoid-forum-checkin.reward-money');
-        $consumption = $this->settings->get('mattoid-forum-checkin.consumption');
+        $rewardMoney = (double)$this->settings->get('mattoid-forum-checkin.reward-money') ?? 0;
+        $consumption = (double)$this->settings->get('mattoid-forum-checkin.consumption') ?? 0;
         $spanDayCheckin = $this->settings->get('mattoid-forum-checkin.span-day-checkin');
 
         $userId = Arr::get($user, 'id');
         $totalCheckinCount = Arr::get($user, 'total_checkin_count');
         $totalContinuousCheckinCount = Arr::get($user, 'total_continuous_checkin_count');
 
+        if ($user->money < ($consumption - $rewardMoney)) {
+            throw new ValidationException(['message' => $this->translator->trans('mattoid-daily-check-in-history.api.error.span-day-checkin')]);
+        }
+
         // 操作签到
+        $user->money += $rewardMoney;
+        $user->money -= $consumption;
         $user->total_checkin_count=$totalCheckinCount + 1;
         $user->total_continuous_checkin_count=$totalContinuousCheckinCount + $totalContinuousCheckinCountHistory + 1;
         $user->save();
@@ -40,7 +49,7 @@ class CheckinEvent
         $history->last_checkin_date = $checkinDate;
         $history->last_checkin_time = date('Y-m-d h:i:s');
         $history->total_checkin_count = $user->total_checkin_count;
-        $history->total_continuous_checkin_count = $user->total_continuous_checkin_count;
+        $history->total_continuous_checkin_count = $totalContinuousCheckinCountHistory + 1;
         $history->save();
 
         return $history;
