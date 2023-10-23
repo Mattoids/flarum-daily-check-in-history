@@ -24,7 +24,7 @@ mattoid-daily-check-in-history:
       checkin-card: 仅限补签卡
       checkin-card-requirement: 开启后将不消耗金钱，但补签卡不足时不允许补签
       checkin-increase: 补签花费增量(%)
-      checkin-increase-requirement: 用户连续补签时，每次签到会比前一次的收费更高。该配置对补签卡无效！（计算公式：补签扣费 = 连续补签次数 * 补签花费 * (1 + 补签花费增量 / 100)）
+      checkin-increase-requirement: 用户连续补签时，每次签到会比前一次的收费更高。该配置对补签卡无效！（计算公式：补签扣费 = 补签花费 * (补签花费增量 * 连续补签次数 / 100 + 1)）
   api:
     error:
       checkin-range: 补签请求超出有效范围，不允许补签超过{day}天的记录

@@ -46,7 +46,7 @@ class CheckinEvent
             $user->checkin_card -= 1;
         } else {
             // 没有签到卡直接扣除金额
-            $user->money -= $consumption * ($checkinIncrease / 100 * $checkinCount + 1);
+            $user->money -= $consumption * ($checkinIncrease * $checkinCount / 100 + 1);
         }
         $user->money += $rewardMoney;
         $user->total_checkin_count=$totalCheckinCount + 1;
