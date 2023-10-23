@@ -31,13 +31,19 @@ class CheckinEvent
         $totalCheckinCount = Arr::get($user, 'total_checkin_count');
         $totalContinuousCheckinCount = Arr::get($user, 'total_continuous_checkin_count');
 
-        if ($user->money < ($consumption - $rewardMoney)) {
+        if ($user->checkin_card <= 0 && $user->money < ($consumption - $rewardMoney)) {
             throw new ValidationException(['message' => $this->translator->trans('mattoid-daily-check-in-history.api.error.span-day-checkin')]);
         }
 
         // 操作签到
+        if ($user->checkin_card > 0) {
+            // 有签到卡则扣除签到卡
+            $user->checkin_card -= 1;
+        } else {
+            // 没有签到卡直接扣除金额
+            $user->money -= $consumption;
+        }
         $user->money += $rewardMoney;
-        $user->money -= $consumption;
         $user->total_checkin_count=$totalCheckinCount + 1;
         $user->total_continuous_checkin_count=$totalContinuousCheckinCount + $totalContinuousCheckinCountHistory + 1;
         $user->save();
