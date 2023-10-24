@@ -28,11 +28,12 @@ class CheckinHistorySerializer extends AbstractSerializer
         $attributes = [
             'id'               => $history->id,
             'userId'           => $history->user_id,
-            'name'             => $history->type ? '签到' : '补签',
+            'type'             => $history->type,
             'totalCheckinCount'                 => $history->total_checkin_count,
             'totalContinuousCheckinCount'       => $history->total_continuous_checkin_count,
-            'start'                   => $history->last_checkin_date,
+            'start'                  => $history->last_checkin_date,
             'time'                   => $history->last_checkin_time,
+            'color'                  => $history->type == 1 ? '#ff9900': ''
         ];
 
         return $attributes;

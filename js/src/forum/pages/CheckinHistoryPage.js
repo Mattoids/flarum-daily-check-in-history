@@ -49,12 +49,12 @@ export default class CheckinHistoryPage extends UserPage {
   }
 
   async getData(info, successCb, failureCb) {
-    const results = await app.store.find('checkin/history', {
+    this.history = await app.store.find('checkin/history', {
       start: info.start.toISOString(),
       end: info.end.toISOString()
     });
 
-    return results.payload.data.map((item) => {
+    return this.history.payload.data.map((item) => {
       return item.attributes;
     });
   }
@@ -79,6 +79,12 @@ export default class CheckinHistoryPage extends UserPage {
   }
 
   async openCreateModal(info) {
+    const list = this.history.payload.data;
+    for (var index in list) {
+      if (list[index].attributes.start == info.dateStr) {
+        return false;
+      }
+    }
     app.modal.show(SupplementCheckinModal, {info})
   }
 
