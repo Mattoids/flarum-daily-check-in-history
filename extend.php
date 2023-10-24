@@ -10,6 +10,8 @@
  */
 
 use Flarum\Extend;
+use Mattoid\CheckinHistory\Event\SupplementaryCheckinEvent;
+use Mattoid\CheckinHistory\Listeners\SupplementaryCheckin;
 use Mattoid\CheckinHistory\Middleware\UserAuthMiddleware;
 use Mattoid\CheckinHistory\Listeners\DoCheckinHistory;
 use Ziven\checkin\Event\checkinUpdated;
@@ -27,6 +29,7 @@ return [
     (new Extend\Middleware("api"))->add(UserAuthMiddleware::class),
 
     (new Extend\Event())->listen(checkinUpdated::class, [DoCheckinHistory::class, 'checkinHistory']),
+    (new Extend\Event())->listen(SupplementaryCheckinEvent::class, [SupplementaryCheckin::class, 'supplementCheckin']),
 
     (new Extend\Routes('api'))
         ->get('/checkin/history', 'checkin.history', Mattoid\CheckinHistory\Api\Controller\ListCheckinHistoryController::class)

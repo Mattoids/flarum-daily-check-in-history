@@ -11,14 +11,11 @@
 
 namespace Mattoid\CheckinHistory\Api\Serializer;
 
-use Flarum\Locale\Translator;
-use Flarum\Settings\SettingsRepositoryInterface;
-use Illuminate\Contracts\Events\Dispatcher;
-use Mattoid\CheckinHistory\Event\CheckinEvent;
-use Mattoid\CheckinHistory\Model\UserCheckinHistory;
 use Flarum\Api\Serializer\AbstractSerializer;
 use Flarum\Api\Serializer\PostSerializer;
 use Flarum\Post\Post;
+use Flarum\Settings\SettingsRepositoryInterface;
+use Mattoid\CheckinHistory\Model\UserCheckinHistory;
 
 class CheckinHistorySerializer extends AbstractSerializer
 {

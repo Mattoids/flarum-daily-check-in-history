@@ -15,16 +15,16 @@ use DateTime;
 use Flarum\Api\Controller\AbstractCreateController;
 use Flarum\Foundation\ValidationException;
 use Flarum\Http\RequestUtil;
+use Flarum\Locale\Translator;
+use Flarum\Settings\SettingsRepositoryInterface;
 use Flarum\User\Exception\PermissionDeniedException;
+use Illuminate\Contracts\Events\Dispatcher;
 use Illuminate\Support\Arr;
 use Mattoid\CheckinHistory\Api\Serializer\CheckinHistorySerializer;
-use Flarum\Settings\SettingsRepositoryInterface;
-use Illuminate\Contracts\Events\Dispatcher;
-use Mattoid\CheckinHistory\Event\CheckinEvent;
+use Mattoid\CheckinHistory\Event\SupplementaryCheckinEvent;
 use Mattoid\CheckinHistory\Model\UserCheckinHistory;
 use Psr\Http\Message\ServerRequestInterface;
 use Tobscure\JsonApi\Document;
-use Flarum\Locale\Translator;
 
 class PostCheckinHistoryController extends AbstractCreateController
 {
@@ -35,14 +35,12 @@ class PostCheckinHistoryController extends AbstractCreateController
     protected $translator;
     protected $settings;
     protected $events;
-    protected $event;
 
-    public function __construct(SettingsRepositoryInterface $settings, Dispatcher $events, Translator $translator, CheckinEvent $event)
+    public function __construct(SettingsRepositoryInterface $settings, Dispatcher $events, Translator $translator)
     {
         $this->translator = $translator;
         $this->settings = $settings;
         $this->events = $events;
-        $this->event = $event;
     }
 
     /**
@@ -126,15 +124,16 @@ class PostCheckinHistoryController extends AbstractCreateController
         $startDate = new DateTime($checkinDate);
         $endDate = new DateTime(date('Y-m-d'));
         $diffDay = $endDate->diff($startDate)->days;
-        if (isset($checkinRange) && $checkinRange > 0 && $diffDay > $checkinRange) {
-            throw new ValidationException(['message' => $this->translator->trans('mattoid-daily-check-in-history.api.error.checkin-range', ['day' => $diffDay])]);
+        if (isset($checkinRange) && $checkinRange > 0 && ($diffDay - 1) >= $checkinRange) {
+            throw new ValidationException(['message' => $this->translator->trans('mattoid-daily-check-in-history.api.error.checkin-range', ['day' => $checkinRange])]);
         }
 
         // 不允许跨天签到
         $totalContinuousCheckinCountHistory = 0;
         // 需要确认是连续签到，并且补签的前一天和后一天都没有漏签
-        $signedinCount = UserCheckinHistory::query()->where('user_id', $userId)->where('last_checkin_date', '>', $checkinDate)->count();
-        if (isset($spanDayCheckin) && !$spanDayCheckin && $signedinCount < $diffDay) {
+        $tomorrow = date('Y-m-d',strtotime("1 days",strtotime($checkinDate)));
+        $signedinCount = UserCheckinHistory::query()->where('user_id', $userId)->where('last_checkin_date', $tomorrow)->count();
+        if (isset($spanDayCheckin) && !$spanDayCheckin && empty($signedinCount)) {
             throw new ValidationException(['message' => $this->translator->trans('mattoid-daily-check-in-history.api.error.span-day-checkin', ['date' => $checkinDate])]);
         }
         $yesterday = date('Y-m-d',strtotime("-1 days",strtotime($checkinDate)));
@@ -162,7 +161,9 @@ class PostCheckinHistoryController extends AbstractCreateController
             $supplementaryCheckinCount ++;
         }
 
-        $history = $this->event->supplementCheckin($actor, $checkinDate, $totalContinuousCheckinCountHistory, $supplementaryCheckinCount);
+
+
+        $history = $this->events->dispatch(new SupplementaryCheckinEvent($actor, $checkinDate, $totalContinuousCheckinCountHistory, $supplementaryCheckinCount));
 
         return $history;
     }

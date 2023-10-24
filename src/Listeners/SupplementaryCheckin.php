@@ -1,15 +1,15 @@
 <?php
 
-namespace Mattoid\CheckinHistory\Event;
+namespace Mattoid\CheckinHistory\Listeners;
 
 use Flarum\Foundation\ValidationException;
 use Flarum\Locale\Translator;
 use Flarum\Settings\SettingsRepositoryInterface;
-use Flarum\User\User;
 use Illuminate\Support\Arr;
+use Mattoid\CheckinHistory\Event\SupplementaryCheckinEvent;
 use Mattoid\CheckinHistory\Model\UserCheckinHistory;
 
-class CheckinEvent
+class SupplementaryCheckin
 {
     public $user;
     protected $settings;
@@ -21,7 +21,12 @@ class CheckinEvent
         $this->translator = $translator;
     }
 
-    public function supplementCheckin(User $user, String $checkinDate, int $totalContinuousCheckinCountHistory = 0, int $checkinCount = 0): UserCheckinHistory {
+    public function supplementCheckin(SupplementaryCheckinEvent $event): UserCheckinHistory {
+
+        $user = $event->user;
+        $checkinDate = $event->checkinDate;
+        $checkinCount = $event->checkinCount;
+        $totalContinuousCheckinCountHistory = $event->totalContinuousCheckinCountHistory;
 
         $rewardMoney = (double)$this->settings->get('mattoid-forum-checkin.reward-money') ?? 0;
         $consumption = (double)$this->settings->get('mattoid-forum-checkin.consumption') ?? 0;
@@ -38,7 +43,7 @@ class CheckinEvent
         if ($checkinCard > 0 && $user->checkin_card <= 0) {
             throw new ValidationException(['message' => $this->translator->trans('mattoid-daily-check-in-history.api.error.insufficient-checkin-card')]);
         }
-        if ($user->checkin_card <= 0 && ($user->money < ($consumption - $rewardMoney) || $user->money < $consumptionMoney)) {
+        if ($user->checkin_card <= 0 && ($user->money < ($consumption - $rewardMoney) || $user->money < ($consumptionMoney - $rewardMoney))) {
             throw new ValidationException(['message' => $this->translator->trans('mattoid-daily-check-in-history.api.error.insufficient-balance')]);
         }
 
