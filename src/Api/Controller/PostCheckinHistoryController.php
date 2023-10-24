@@ -66,8 +66,6 @@ class PostCheckinHistoryController extends AbstractCreateController
             throw new PermissionDeniedException();
         }
 
-        app('log')->info($checkinDate);
-        app('log')->info(empty($checkinDate));
         if (!empty($checkinDate)) {
             $startDate = new DateTime($checkinDate);
             $endDate = new DateTime(date('Y-m-d'));
@@ -90,15 +88,14 @@ class PostCheckinHistoryController extends AbstractCreateController
         $minSupplementaryDate = $this->settings->get('mattoid-forum-checkin.min-supplementary-date') ?? '';
 
         // 小药店签到则系统自动获取最后一次未签到数据进行补签
+        $userCheckinHistory = [];
+        if (isset($checkinRange) && $checkinRange) {
+            $rangeEndData = date('Y-m-d',strtotime("-{$checkinRange} days",strtotime(date('Y-m-d'))));
+            $userCheckinHistory = UserCheckinHistory::query()->where('user_id', $userId)->where('last_checkin_date', '>', $rangeEndData)->orderByDesc("last_checkin_date")->get();
+        } else {
+            $userCheckinHistory = UserCheckinHistory::query()->where('user_id', $userId)->orderByDesc("last_checkin_date")->get();
+        }
         if (isset($checkinPosition) && $checkinPosition == 0) {
-            $userCheckinHistory = [];
-            if (isset($checkinRange) && $checkinRange) {
-                $rangeEndData = date('Y-m-d',strtotime("-{$checkinRange} days",strtotime(date('Y-m-d'))));
-                $userCheckinHistory = UserCheckinHistory::query()->where('user_id', $userId)->where('last_checkin_date', '>', $rangeEndData)->orderByDesc("last_checkin_date")->get();
-            } else {
-                $userCheckinHistory = UserCheckinHistory::query()->where('user_id', $userId)->orderByDesc("last_checkin_date")->get();
-            }
-
             // 查找最近一次漏签数据
             foreach ($userCheckinHistory as $key => $value) {
                 $checkinStart = new DateTime($value->last_checkin_date);
@@ -146,7 +143,26 @@ class PostCheckinHistoryController extends AbstractCreateController
             $totalContinuousCheckinCountHistory = $historyResult->total_continuous_checkin_count;
         }
 
-        $history = $this->event->supplementCheckin($actor, $checkinDate, $totalContinuousCheckinCountHistory, $checkinCount);
+        // 计算连续签补签到日期
+        $day = 1;
+        $userCheckinHistoryMap = [];
+        $supplementaryCheckinCount = 0;
+        foreach ($userCheckinHistory as $item) {
+            $userCheckinHistoryMap[$item->last_checkin_date] = $item;
+        }
+        while (true) {
+            $subDate = date('Y-m-d',strtotime("+{$day} days",strtotime($checkinDate)));
+            if (empty($userCheckinHistoryMap[$subDate])) {
+                break;
+            }
+            if ($userCheckinHistoryMap[$subDate]->type == 0) {
+                break;
+            }
+            $day ++;
+            $supplementaryCheckinCount ++;
+        }
+
+        $history = $this->event->supplementCheckin($actor, $checkinDate, $totalContinuousCheckinCountHistory, $supplementaryCheckinCount);
 
         return $history;
     }

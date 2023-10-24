@@ -33,23 +33,25 @@ class CheckinEvent
         $totalCheckinCount = Arr::get($user, 'total_checkin_count');
         $totalContinuousCheckinCount = Arr::get($user, 'total_continuous_checkin_count');
 
+        $consumptionMoney = $consumption * ($checkinIncrease * $checkinCount / 100 + 1);
+
         if ($checkinCard > 0 && $user->checkin_card <= 0) {
             throw new ValidationException(['message' => $this->translator->trans('mattoid-daily-check-in-history.api.error.insufficient-checkin-card')]);
         }
-        if ($user->checkin_card <= 0 && $user->money < ($consumption - $rewardMoney)) {
+        if ($user->checkin_card <= 0 && ($user->money < ($consumption - $rewardMoney) || $user->money < $consumptionMoney)) {
             throw new ValidationException(['message' => $this->translator->trans('mattoid-daily-check-in-history.api.error.insufficient-balance')]);
         }
 
-        app('log')->info($checkinCount);
+
         // 操作签到
+        $user->money += $rewardMoney;
         if ($user->checkin_card > 0) {
             // 有签到卡则扣除签到卡
             $user->checkin_card -= 1;
         } else {
             // 没有签到卡直接扣除金额
-            $user->money -= $consumption * ($checkinIncrease * $checkinCount / 100 + 1);
+            $user->money -= $consumptionMoney;
         }
-        $user->money += $rewardMoney;
         $user->total_checkin_count=$totalCheckinCount + 1;
         $user->total_continuous_checkin_count=$totalContinuousCheckinCount + $totalContinuousCheckinCountHistory + 1;
         $user->save();
