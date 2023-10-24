@@ -81,6 +81,10 @@ export default class CheckinHistoryPage extends UserPage {
   async openCreateModal(info) {
     const refetchEvents = this.calendar.refetchEvents.bind(this.calendar);
 
+    if (new Date(info.dateStr).getTime() > new Date()) {
+      return false;
+    }
+
     const list = this.history.payload.data;
     for (var index in list) {
       if (list[index].attributes.start == info.dateStr) {
