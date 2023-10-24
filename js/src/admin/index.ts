@@ -53,6 +53,24 @@ app.initializers.add('mattoid-daily-check-in-history', () => {
       options: {0 : "小药店", 1 : "用户中心（日历）"},
       default: 0
     })
+    .registerSetting({
+      setting: 'mattoid-forum-checkin.min-supplementary-date',
+      label: app.translator.trans('mattoid-daily-check-in-history.admin.settings.min-supplementary-date'),
+      default: '#2756c6',
+      type: 'date',
+    })
+    .registerSetting({
+      setting: 'mattoid-forum-checkin.checkin-color',
+      label: app.translator.trans('mattoid-daily-check-in-history.admin.settings.checkin-color'),
+      default: '#2756c6',
+      type: 'text',
+    })
+    .registerSetting({
+      setting: 'mattoid-forum-checkin.supplementary-color',
+      label: app.translator.trans('mattoid-daily-check-in-history.admin.settings.supplementary-color'),
+      default: '#ff9900',
+      type: 'text',
+    })
     .registerPermission(
       {
         icon: 'fas fa-id-card',

@@ -37,6 +37,7 @@ export default class SupplementCheckinModal extends Modal {
 
 
   async onsubmit(e) {
+    e.preventDefault();
 
     app.request({
       method: 'POST',
@@ -49,6 +50,7 @@ export default class SupplementCheckinModal extends Modal {
       console.log(result)
     });
 
-    // this.hide();
+    this.attrs.callback();
+    this.hide();
   }
 }

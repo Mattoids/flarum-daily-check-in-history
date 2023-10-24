@@ -25,6 +25,9 @@ mattoid-daily-check-in-history:
       checkin-card-requirement: 开启后将不消耗金钱，但补签卡不足时不允许补签
       checkin-increase: 补签花费增量(%)
       checkin-increase-requirement: 用户连续补签时，每次签到会比前一次的收费更高。该配置对补签卡无效！（计算公式：补签扣费 = 补签花费 * (补签花费增量 * 连续补签次数 / 100 + 1)）
+      checkin-color: 签到颜色
+      supplementary-color: 补签颜色
+      min-supplementary-date: 允许最早补签日
   api:
     error:
       checkin-range: 补签请求超出有效范围，不允许补签超过{day}天的记录
@@ -32,3 +35,5 @@ mattoid-daily-check-in-history:
       span-day-checkin: 签到失败，{date}之前有未签到记录，不允许跨天签到
       insufficient-balance: 余额不足，补签失败
       insufficient-checkin-card: 补签卡不足
+      min-supplementary-date: 不允许补签{day}以前的记录
+      greater-than-today: 签到日期不允许大于今天

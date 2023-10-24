@@ -11,6 +11,10 @@
 
 namespace Mattoid\CheckinHistory\Api\Serializer;
 
+use Flarum\Locale\Translator;
+use Flarum\Settings\SettingsRepositoryInterface;
+use Illuminate\Contracts\Events\Dispatcher;
+use Mattoid\CheckinHistory\Event\CheckinEvent;
 use Mattoid\CheckinHistory\Model\UserCheckinHistory;
 use Flarum\Api\Serializer\AbstractSerializer;
 use Flarum\Api\Serializer\PostSerializer;
@@ -19,12 +23,22 @@ use Flarum\Post\Post;
 class CheckinHistorySerializer extends AbstractSerializer
 {
     protected $type = 'checkin.history';
+    protected $settings;
+
+    public function __construct(SettingsRepositoryInterface $settings)
+    {
+        $this->settings = $settings;
+    }
 
     /**
      * {@inheritdoc}
      */
     protected function getDefaultAttributes($history)
     {
+        $checkinColor = $this->settings->get('mattoid-forum-checkin.checkin-color') ?? '#2756c6';
+        $supplementaryColor = $this->settings->get('mattoid-forum-checkin.supplementary-color') ?? '#ff9900';
+        $checkinColor = $checkinColor == '' ? '#2756c6' : $checkinColor;
+        $supplementaryColor = $supplementaryColor == '' ? '#ff9900' : $supplementaryColor;
         $attributes = [
             'id'               => $history->id,
             'userId'           => $history->user_id,
@@ -33,7 +47,7 @@ class CheckinHistorySerializer extends AbstractSerializer
             'totalContinuousCheckinCount'       => $history->total_continuous_checkin_count,
             'start'                  => $history->last_checkin_date,
             'time'                   => $history->last_checkin_time,
-            'color'                  => $history->type == 1 ? '#ff9900': ''
+            'color'                  => $history->type == 1 ?  $supplementaryColor : $checkinColor
         ];
 
         return $attributes;

@@ -25,6 +25,9 @@ mattoid-daily-check-in-history:
       checkin-card-requirement: After opening, it will not consume money, but when there is insufficient supplementary cards, supplementary signing is not allowed
       checkin-increase: Increment of supplementary signing expenses(%)
       checkin-increase-requirement: When users continuously sign in, the fee for each check-in will be higher than the previous one. This configuration is invalid for make-up cards!
+      checkin-color: Checkin Color
+      supplementary-color: Supplementary Checkin Color
+      min-supplementary-date: Allow earliest supplementary signing date
   api:
     error:
       checkin-range: The supplementary signature request exceeds the valid range, and it is not allowed to supplement records that exceed {day} days
@@ -32,3 +35,5 @@ mattoid-daily-check-in-history:
       span-day-checkin: Sign in failed. There were no sign in records before {date}, cross day sign in is not allowed
       insufficient-balance: Insufficient Balance, Sign in failed
       insufficient-checkin-card: Insufficient supplementary card signing
+      min-supplementary-date: It is not allowed to supplement previous records of {day}
+      greater-than-today: The check-in date cannot be greater than today

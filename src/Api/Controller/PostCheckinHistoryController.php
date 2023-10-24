@@ -66,6 +66,17 @@ class PostCheckinHistoryController extends AbstractCreateController
             throw new PermissionDeniedException();
         }
 
+        app('log')->info($checkinDate);
+        app('log')->info(empty($checkinDate));
+        if (!empty($checkinDate)) {
+            $startDate = new DateTime($checkinDate);
+            $endDate = new DateTime(date('Y-m-d'));
+
+            if ($startDate->getTimestamp() - $endDate->getTimestamp() > 0) {
+                throw new ValidationException(['message' => $this->translator->trans('mattoid-daily-check-in-history.api.error.greater-than-today')]);
+            }
+        }
+
         // 查询是否已补签
         $historyResult = UserCheckinHistory::query()->where('user_id', $userId)->where('last_checkin_date', $checkinDate)->first();
         if ($historyResult) {
@@ -76,6 +87,7 @@ class PostCheckinHistoryController extends AbstractCreateController
         $checkinPosition = $this->settings->get('mattoid-forum-checkin.checkin-position') ?? 0;
         $spanDayCheckin = $this->settings->get('mattoid-forum-checkin.span-day-checkin') ?? 0;
         $checkinRange = $this->settings->get('mattoid-forum-checkin.checkin-range') ?? 0;
+        $minSupplementaryDate = $this->settings->get('mattoid-forum-checkin.min-supplementary-date') ?? '';
 
         // 小药店签到则系统自动获取最后一次未签到数据进行补签
         if (isset($checkinPosition) && $checkinPosition == 0) {
@@ -96,6 +108,13 @@ class PostCheckinHistoryController extends AbstractCreateController
                     $checkinDate = $value->last_checkin_date;
                 }
             }
+        }
+
+        // 允许最早补签日期
+        $startDate = new DateTime($minSupplementaryDate);
+        $endDate = new DateTime($checkinDate);
+        if (!empty($minSupplementaryDate) && $endDate->getTimestamp() - $startDate->getTimestamp() < 0) {
+            throw new ValidationException(['message' => $this->translator->trans('mattoid-daily-check-in-history.api.error.min-supplementary-date', ['day' => $minSupplementaryDate])]);
         }
 
         // 连续补签限制
