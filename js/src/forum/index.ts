@@ -19,7 +19,7 @@ app.initializers.add('mattoid-checkin-history', () => {
       href: app.route('user.checkin.history', {
         username: app.session.user.username(),
       }),
-      icon: 'fas fa-checkin-history',
+      icon: 'fas fa-calendar-alt',
     }, app.translator.trans('mattoid-daily-check-in-history.forum.page.link-name')));
   });
 });
