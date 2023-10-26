@@ -32,7 +32,7 @@ mattoid-daily-check-in-history:
     error:
       checkin-range: The supplementary signature request exceeds the valid range, and it is not allowed to supplement records that exceed {day} days
       max-supplementary-checkin: Continuous supplementary signing exceeds the limit, allowing a maximum of {day} consecutive supplementary signing days
-      span-day-checkin: Sign in failed. There were no sign in records before {date}, cross day sign in is not allowed
+      span-day-checkin: Sign-in failed. There are records of non attendance after {date}, cross day check-in is not allowed
       insufficient-balance: Insufficient Balance, Sign in failed
       insufficient-checkin-card: Insufficient supplementary card signing
       min-supplementary-date: It is not allowed to supplement previous records of {day}
