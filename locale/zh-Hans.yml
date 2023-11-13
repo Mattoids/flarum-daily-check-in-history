@@ -14,6 +14,8 @@ mattoid-daily-check-in-history:
       span-day-checkin: 允许跨天补签
       span-day-checkin-requirement: 开启后，补签日期之后不允许有未签到的日期数据
       allow-supplementary-check-in: 允许补签
+      issuance-of-supplementary-cards: 发放补签卡
+      complimentary-supplementary-card: 赠送补签卡
       consumption: 补签花费
       reward-money: 补签奖励
       reward-money-requirement: 需要 <code>antoinefr/flarum-ext-money</code> 扩展
@@ -28,6 +30,14 @@ mattoid-daily-check-in-history:
       checkin-color: 签到颜色
       supplementary-color: 补签颜色
       min-supplementary-date: 允许最早补签日
+      submit-give: 赠送
+      user-all: 所有用户
+      give-number: 赠送数量
+      username: 用户名
+      user-group: 用户组
+      group-help: 若用户组非空，则用户名规则不生效，以用户组优先
+      user-help: 多个用户名请以下列符号分割（英文逗号：, 中文逗号：， 竖线：| 空格： ）
+      range-help: 勾选：用户名不可编辑且不生效，未勾选：用户名必填，仅发送给对应用户
   api:
     error:
       checkin-range: 补签请求超出有效范围，不允许补签超过{day}天的记录

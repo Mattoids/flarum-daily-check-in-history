@@ -14,6 +14,8 @@ mattoid-daily-check-in-history:
       span-day-checkin: span day checkin
       span-day-checkin-requirement: After opening, no unsigned date data is allowed after the supplementary signature date
       allow-supplementary-check-in: allow supplementary checkin
+      issuance-of-supplementary-cards: issuance of supplementary cards
+      complimentary-supplementary-card: complimentary supplementary card
       consumption: consumption
       reward-money: reward money
       reward-money-requirement: Requires the <code>antoinefr/flarum-ext-money</code> extension
@@ -28,6 +30,14 @@ mattoid-daily-check-in-history:
       checkin-color: Checkin Color
       supplementary-color: Supplementary Checkin Color
       min-supplementary-date: Allow earliest supplementary signing date
+      submit-give: submit
+      user-all: all user
+      give-number: number
+      username: username
+      email: email
+      group-help: If the user group is not empty, the username rule will not take effect, and the user group will take precedence
+      user-help: Multiple user names should be separated by the following symbols (English comma：, Chinese comma：, vertical bar：| blankSpace： )
+      range-help: Checked：User name cannot be edited and is not valid, Unchecked：User name is required and only sent to the corresponding user
   api:
     error:
       checkin-range: The supplementary signature request exceeds the valid range, and it is not allowed to supplement records that exceed {day} days

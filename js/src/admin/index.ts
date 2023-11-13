@@ -1,8 +1,18 @@
 import app from 'flarum/admin/app';
+import Button from 'flarum/common/components/Button';
+import SendMoneyModal from './components/SendMoneyModal';
 
 app.initializers.add('mattoid-daily-check-in-history', () => {
 
   app.extensionData.for("mattoid-daily-check-in-history")
+    .registerSetting(function () {
+      return m('.Form-group', Button.component({
+        className: 'Button',
+        onclick() {
+          app.modal.show(SendMoneyModal);
+        },
+      }, app.translator.trans('mattoid-daily-check-in-history.admin.settings.complimentary-supplementary-card')));
+    })
     .registerSetting({
       setting: 'mattoid-forum-checkin.max-supplementary-checkin',
       help: app.translator.trans('mattoid-daily-check-in-history.admin.settings.max-supplementary-checkin-requirement'),
@@ -76,6 +86,15 @@ app.initializers.add('mattoid-daily-check-in-history', () => {
         icon: 'fas fa-id-card',
         label: app.translator.trans('mattoid-daily-check-in-history.admin.settings.allow-supplementary-check-in'),
         permission: 'checkin.allowSupplementaryCheckIn',
+      },
+      'moderate',
+      90
+    )
+    .registerPermission(
+      {
+        icon: 'fas fa-id-card',
+        label: app.translator.trans('mattoid-daily-check-in-history.admin.settings.issuance-of-supplementary-cards'),
+        permission: 'checkin.issuanceOfSupplementaryCards',
       },
       'moderate',
       90
