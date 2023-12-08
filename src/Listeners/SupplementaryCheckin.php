@@ -74,7 +74,7 @@ class SupplementaryCheckin
         $history->total_continuous_checkin_count = $totalContinuousCheckinCountHistory + 1;
         $history->save();
 
-        if (class_exists('AntoineFr\Money\Event\MoneyUpdated')) {
+        if ($rewardMoney != $consumptionMoney && class_exists('AntoineFr\Money\Event\MoneyUpdated')) {
             $this->events->dispatch(new \AntoineFr\Money\Event\MoneyUpdated($user));
         }
 
