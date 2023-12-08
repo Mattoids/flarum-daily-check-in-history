@@ -2,7 +2,6 @@
 
 namespace Mattoid\CheckinHistory\Listeners;
 
-//use AntoineFr\Money\Event\MoneyUpdated;
 use Flarum\Foundation\ValidationException;
 use Flarum\Locale\Translator;
 use Flarum\Settings\SettingsRepositoryInterface;
@@ -75,8 +74,9 @@ class SupplementaryCheckin
         $history->total_continuous_checkin_count = $totalContinuousCheckinCountHistory + 1;
         $history->save();
 
-
-//        $this->events->dispatch(new MoneyUpdated($user));
+        if (class_exists('AntoineFr\Money\Event\MoneyUpdated')) {
+            $this->events->dispatch(new \AntoineFr\Money\Event\MoneyUpdated($user));
+        }
 
         return $history;
     }
