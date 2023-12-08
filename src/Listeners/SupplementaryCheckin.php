@@ -2,10 +2,12 @@
 
 namespace Mattoid\CheckinHistory\Listeners;
 
+//use AntoineFr\Money\Event\MoneyUpdated;
 use Flarum\Foundation\ValidationException;
 use Flarum\Locale\Translator;
 use Flarum\Settings\SettingsRepositoryInterface;
 use Illuminate\Support\Arr;
+use Illuminate\Contracts\Events\Dispatcher;
 use Mattoid\CheckinHistory\Event\SupplementaryCheckinEvent;
 use Mattoid\CheckinHistory\Model\UserCheckinHistory;
 
@@ -14,11 +16,13 @@ class SupplementaryCheckin
     public $user;
     protected $settings;
     protected $translator;
+    protected $events;
 
-    public function __construct(SettingsRepositoryInterface $settings, Translator $translator)
+    public function __construct(SettingsRepositoryInterface $settings, Translator $translator, Dispatcher $events)
     {
         $this->settings = $settings;
         $this->translator = $translator;
+        $this->events = $events;
     }
 
     public function supplementCheckin(SupplementaryCheckinEvent $event): UserCheckinHistory {
@@ -70,6 +74,9 @@ class SupplementaryCheckin
         $history->total_checkin_count = $user->total_checkin_count;
         $history->total_continuous_checkin_count = $totalContinuousCheckinCountHistory + 1;
         $history->save();
+
+
+//        $this->events->dispatch(new MoneyUpdated($user));
 
         return $history;
     }
