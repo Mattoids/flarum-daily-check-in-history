@@ -7,6 +7,7 @@ mattoid-daily-check-in-history:
       checkin: checkin
       supplement-checkin-desc: Are you sure you want to supplement the check-in for {dateStr}?
       submit: yes
+    supplementary-checkin-reward: Supplementary signing rewards
   admin:
     settings:
       max-supplementary-checkin: max continuous supplementary checkin

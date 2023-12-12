@@ -77,6 +77,10 @@ class SupplementaryCheckin
         if ($rewardMoney != $consumptionMoney && class_exists('AntoineFr\Money\Event\MoneyUpdated')) {
             $this->events->dispatch(new \AntoineFr\Money\Event\MoneyUpdated($user));
         }
+        if ($rewardMoney != $consumptionMoney && class_exists('Mattoid\MoneyHistory\Event\MoneyHistoryEvent')) {
+            $supplementaryCheckinReward = $this->translator->trans("mattoid-daily-check-in-history.forum.supplementary-checkin-reward");
+            $this->events->dispatch(new \Mattoid\MoneyHistory\Event\MoneyHistoryEvent($user, $rewardMoney + $consumptionMoney, "SUPPLEMENTARYCHECKIN", $supplementaryCheckinReward));
+        }
 
         return $history;
     }
