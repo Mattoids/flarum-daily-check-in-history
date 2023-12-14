@@ -4,6 +4,8 @@
 
 A [Flarum](http://flarum.org) extension. daily check in history
 
+本插件会自动记录用户签到历史，用于让用户查询自己的及时签到记录。并且支持补充签到、签到卡等功能
+
 ## Installation
 
 Install with composer:
