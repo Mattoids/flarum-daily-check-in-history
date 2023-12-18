@@ -16,10 +16,8 @@ export default class CheckinHistoryPage extends UserPage {
   content() {
     if (app.session.user) {
       return (
-        <div className="Post-body">
-          <div className="CheckinHistoryUserPage">
-            <div id="calendar" />
-          </div>
+        <div className="CheckinHistoryUserPage">
+          <div id="calendar" />
         </div>
       );
     }
