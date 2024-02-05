@@ -19,9 +19,12 @@ class DoCheckinHistory {
     public function checkinHistory(checkinUpdated $event){
         $user = $event->user;
 
+        $timezone = intval($this->settings->get('ziven-forum-checkin.checkinTimeZone', 0));
+        $current_timestamp = time()+$timezone*60*60;
+
         $history = new UserCheckinHistory();
         $history->user_id = $user->id;
-        $history->last_checkin_date = date("Y-m-d");
+        $history->last_checkin_date = date('Y-m-d', $current_timestamp);
         $history->total_checkin_count = $user->total_checkin_count;
         $history->total_continuous_checkin_count = $user->total_continuous_checkin_count;
         $history->last_checkin_time = $user->last_checkin_time;
