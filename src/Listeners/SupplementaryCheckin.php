@@ -62,6 +62,9 @@ class SupplementaryCheckin
         }
         $user->total_checkin_count=$totalCheckinCount + 1;
         $user->total_continuous_checkin_count=$totalContinuousCheckinCount + $totalContinuousCheckinCountHistory + 1;
+        if (!class_exists('AntoineFr\Money\Event\MoneyUpdated')) {
+            unset($user->money);
+        }
         $user->save();
 
         // 记录补签数据
