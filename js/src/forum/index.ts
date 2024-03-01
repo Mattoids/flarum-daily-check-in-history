@@ -11,10 +11,10 @@ app.initializers.add('mattoid-checkin-history', () => {
   };
 
   extend(UserPage.prototype, 'navItems', function (items) {
-    console.log("=====================")
-    console.log(this.user)
-    if (!this.user || !this.user.attribute('canQueryOthersHistory')) {
-      return;
+    if (app.session.user.id() !== this.user.id()) {
+      if (!this.user || !this.user.attribute('canQueryOthersHistory')) {
+        return;
+      }
     }
 
     items.add('post-checkin-history', LinkButton.component({
