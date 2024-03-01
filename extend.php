@@ -10,6 +10,8 @@
  */
 
 use Flarum\Extend;
+use Flarum\Api\Serializer\BasicUserSerializer;
+use Mattoid\CheckinHistory\Attributes\UserAttributes;
 use Mattoid\CheckinHistory\Event\SupplementaryCheckinEvent;
 use Mattoid\CheckinHistory\Listeners\SupplementaryCheckin;
 use Mattoid\CheckinHistory\Middleware\UserAuthMiddleware;
@@ -30,6 +32,9 @@ return [
 
     (new Extend\Event())->listen(checkinUpdated::class, [DoCheckinHistory::class, 'checkinHistory']),
     (new Extend\Event())->listen(SupplementaryCheckinEvent::class, [SupplementaryCheckin::class, 'supplementCheckin']),
+
+    (new Extend\ApiSerializer(BasicUserSerializer::class))
+        ->attributes(UserAttributes::class),
 
     (new Extend\Routes('api'))
         ->get('/checkin/history', 'checkin.history', Mattoid\CheckinHistory\Api\Controller\ListCheckinHistoryController::class)

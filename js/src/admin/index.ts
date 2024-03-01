@@ -99,4 +99,11 @@ app.initializers.add('mattoid-daily-check-in-history', () => {
       'moderate',
       90
     )
+    .registerPermission(
+      {
+        icon: 'fas fa-id-card',
+        label: app.translator.trans('mattoid-daily-check-in-history.admin.settings.query-others-history'),
+        permission: 'checkin.queryOthersHistory',
+        allowGuest: true
+      }, 'view')
 });

@@ -11,13 +11,15 @@ app.initializers.add('mattoid-checkin-history', () => {
   };
 
   extend(UserPage.prototype, 'navItems', function (items) {
-    if (!app.session.user) {
+    console.log("=====================")
+    console.log(this.user)
+    if (!this.user || !this.user.attribute('canQueryOthersHistory')) {
       return;
     }
 
     items.add('post-checkin-history', LinkButton.component({
       href: app.route('user.checkin.history', {
-        username: app.session.user.username(),
+        username: this.user.slug(),
       }),
       icon: 'fas fa-calendar-alt',
     }, app.translator.trans('mattoid-daily-check-in-history.forum.page.link-name')));

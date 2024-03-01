@@ -17,6 +17,7 @@ mattoid-daily-check-in-history:
       allow-supplementary-check-in: 允许补签
       issuance-of-supplementary-cards: 发放补签卡
       complimentary-supplementary-card: 赠送补签卡
+      query-others-history: 查看他人记录
       consumption: 补签花费
       reward-money: 补签奖励
       reward-money-requirement: 需要 <code>antoinefr/flarum-ext-money</code> 扩展

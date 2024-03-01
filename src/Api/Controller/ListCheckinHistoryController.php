@@ -45,9 +45,12 @@ class ListCheckinHistoryController extends AbstractListController
             return array();
         }
 
-        $userId = Arr::get($actor, 'id');
+        $userId = Arr::get($request->getQueryParams(), 'userId');
         $startDate = Arr::get($request->getQueryParams(), 'start');
         $endDate = Arr::get($request->getQueryParams(), 'end');
+        if (!$userId) {
+            $userId = Arr::get($actor, 'id');
+        }
 
         return UserCheckinHistory::where('user_id', $userId)->where('last_checkin_date', ">=", $startDate)
             ->where('last_checkin_date', "<=", $endDate)->get();

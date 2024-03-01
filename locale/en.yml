@@ -17,6 +17,7 @@ mattoid-daily-check-in-history:
       allow-supplementary-check-in: allow supplementary checkin
       issuance-of-supplementary-cards: issuance of supplementary cards
       complimentary-supplementary-card: complimentary supplementary card
+      query-others-history: View Others' Records
       consumption: consumption
       reward-money: reward money
       reward-money-requirement: Requires the <code>antoinefr/flarum-ext-money</code> extension
