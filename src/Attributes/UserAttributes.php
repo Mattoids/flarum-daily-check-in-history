@@ -9,12 +9,12 @@ class UserAttributes
 {
     public function __invoke(BasicUserSerializer $serializer, User $user): array
     {
-        if ($serializer->getActor()->cannot('queryOthersHistory', $user)) {
-            return [];
-        }
+        $attributes = [];
+        $actor = $serializer->getActor();
 
-        return [
-            'canQueryOthersHistory' => true,
-        ];
+        $attributes['checkinCard'] = $actor->checkin_card;
+        $attributes['canQueryOthersHistory'] = $serializer->getActor()->can('queryOthersHistory', $user);
+
+        return $attributes;
     }
 }

@@ -3,6 +3,7 @@ mattoid-daily-check-in-history:
     page:
       link-name: checkin history
       title: CheckinHistory
+      checkin-card: Checkin Card
     modal:
       checkin: checkin
       supplement-checkin-desc: Are you sure you want to supplement the check-in for {dateStr}?

@@ -3,6 +3,7 @@ mattoid-daily-check-in-history:
     page:
       link-name: 签到历史
       title: 签到历史
+      checkin-card: 补签卡
     modal:
       checkin: 补签
       supplement-checkin-desc: 确认要补 {dateStr} 的签到吗？
