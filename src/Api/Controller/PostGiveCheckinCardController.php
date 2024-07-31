@@ -56,8 +56,6 @@ class PostGiveCheckinCardController extends AbstractCreateController
      */
     protected function data(ServerRequestInterface $request, Document $document)
     {
-
-        app("log")->info(json_encode($request->getParsedBody()));
         $actor = RequestUtil::getActor($request);
         $userId = Arr::get($actor, 'id');
         $username = Arr::get($request->getParsedBody(), 'username');

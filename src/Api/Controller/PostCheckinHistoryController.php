@@ -11,6 +11,7 @@
 
 namespace Mattoid\CheckinHistory\Api\Controller;
 
+use Carbon\Carbon;
 use DateTime;
 use Flarum\Api\Controller\AbstractCreateController;
 use Flarum\Foundation\ValidationException;
@@ -132,7 +133,7 @@ class PostCheckinHistoryController extends AbstractCreateController
         $totalContinuousCheckinCountHistory = 0;
         // 需要确认是连续签到，并且补签的前一天和后一天都没有漏签
         $tomorrow = date('Y-m-d',strtotime("1 days",strtotime($checkinDate)));
-        $signedinCount = UserCheckinHistory::query()->where('user_id', $userId)->where('last_checkin_date', $tomorrow)->count();
+        $signedinCount = UserCheckinHistory::query()->where('user_id', $userId)->where('last_checkin_date', '>=', $tomorrow)->count();
         if (isset($spanDayCheckin) && !$spanDayCheckin && empty($signedinCount)) {
             throw new ValidationException(['message' => $this->translator->trans('mattoid-daily-check-in-history.api.error.span-day-checkin', ['date' => $checkinDate])]);
         }
