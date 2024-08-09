@@ -1,27 +1,27 @@
 const libs = {
   fullcalendarCore: {
-    js: 'https://mattoid.oss-cn-hangzhou.aliyuncs.com/@fullcalendar/core@6.1.8/index.global.min.js',
+    js: '/assets/extensions/mattoid-daily-check-in-history/dist/@fullcalendar/core@6.1.8/index.global.min.js',
     loaded: () => typeof FullCalendar !== 'undefined',
   },
   fullcalendarLocales: {
-    js: 'https://mattoid.oss-cn-hangzhou.aliyuncs.com/@fullcalendar/core@6.1.8/locales-all.global.min.js',
+    js: '/assets/extensions/mattoid-daily-check-in-history/dist/@fullcalendar/core@6.1.8/locales-all.global.min.js',
     loaded: () => typeof FullCalendar !== 'undefined' && FullCalendar.globalLocales.length > 2,
   },
   fullcalendarDayGrid: {
-    js: 'https://mattoid.oss-cn-hangzhou.aliyuncs.com/@fullcalendar/daygrid@6.1.8/index.global.min.js',
+    js: '/assets/extensions/mattoid-daily-check-in-history/dist/@fullcalendar/daygrid@6.1.8/index.global.min.js',
     loaded: () => typeof FullCalendar !== 'undefined' && FullCalendar.globalPlugins.find((p) => p.name === '@fullcalendar/daygrid'),
   },
   fullcalendarInteraction: {
-    js: 'https://mattoid.oss-cn-hangzhou.aliyuncs.com/@fullcalendar/interaction@6.1.8/index.global.min.js',
+    js: '/assets/extensions/mattoid-daily-check-in-history/dist/@fullcalendar/interaction@6.1.8/index.global.min.js',
     loaded: () => typeof FullCalendar !== 'undefined' && FullCalendar.globalPlugins.find((p) => p.name === '@fullcalendar/interaction'),
   },
   fullcalendarList: {
-    js: 'https://mattoid.oss-cn-hangzhou.aliyuncs.com/@fullcalendar/list@6.1.8/index.global.min.js',
+    js: '/assets/extensions/mattoid-daily-check-in-history/dist/@fullcalendar/list@6.1.8/index.global.min.js',
     loaded: () => typeof FullCalendar !== 'undefined' && FullCalendar.globalPlugins.find((p) => p.name === '@fullcalendar/list'),
   },
 
   flatpickr: {
-    css: 'https://mattoid.oss-cn-hangzhou.aliyuncs.com/@fullcalendar/flatpickr.min.css',
+    css: '/assets/extensions/mattoid-daily-check-in-history/dist/@fullcalendar/flatpickr.min.css',
     js: 'https://cdn.jsdelivr.net/npm/flatpickr',
     loaded: () => typeof window.flatpickr !== 'undefined',
   },
