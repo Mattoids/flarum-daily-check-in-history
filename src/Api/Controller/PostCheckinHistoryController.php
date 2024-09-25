@@ -137,8 +137,9 @@ class PostCheckinHistoryController extends AbstractCreateController
             throw new ValidationException(['message' => $this->translator->trans('mattoid-daily-check-in-history.api.error.span-day-checkin', ['date' => $checkinDate])]);
         }
         $yesterday = date('Y-m-d',strtotime("-1 days",strtotime($checkinDate)));
-        $historyResult = UserCheckinHistory::query()->where('user_id', $userId)->where('last_checkin_date', $yesterday)->first();
-        if ($historyResult && $signedinCount >= $diffDay) {
+        # 补签的数据不累加连续天数，只计算当前不填的天数，即连续天数+1
+        $historyResult = UserCheckinHistory::query()->where('user_id', $userId)->where('last_checkin_date', $yesterday)->where('type', 0)->first();
+        if ($historyResult) {
             $totalContinuousCheckinCountHistory = $historyResult->total_continuous_checkin_count;
         }
 
