@@ -14,7 +14,7 @@ mattoid-daily-check-in-history:
       max-supplementary-checkin: 最大连续补签数
       max-supplementary-checkin-requirement: 允许签到最大连续补签的天数，若中间有已签到的日期则重新计算连续补签天数
       span-day-checkin: 允许跨天补签
-      span-day-checkin-requirement: 开启后，补签日期之后不允许有未签到的日期数据
+      span-day-checkin-requirement: 开启后，补签日期之后允许有未签到的日期数据
       allow-supplementary-check-in: 允许补签
       issuance-of-supplementary-cards: 发放补签卡
       complimentary-supplementary-card: 赠送补签卡

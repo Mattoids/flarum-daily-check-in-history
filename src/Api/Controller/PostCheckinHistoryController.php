@@ -56,7 +56,6 @@ class PostCheckinHistoryController extends AbstractCreateController
      */
     protected function data(ServerRequestInterface $request, Document $document)
     {
-
         $actor = RequestUtil::getActor($request);
         $userId = Arr::get($actor, 'id');
         $checkinDate = Arr::get($request->getParsedBody(), 'date');
@@ -134,7 +133,7 @@ class PostCheckinHistoryController extends AbstractCreateController
         // 需要确认是连续签到，并且补签的前一天和后一天都没有漏签
         $tomorrow = date('Y-m-d',strtotime("1 days",strtotime($checkinDate)));
         $signedinCount = UserCheckinHistory::query()->where('user_id', $userId)->where('last_checkin_date', '>=', $tomorrow)->count();
-        if (isset($spanDayCheckin) && !$spanDayCheckin && empty($signedinCount)) {
+        if (isset($spanDayCheckin) && !$spanDayCheckin && $signedinCount < $diffDay) {
             throw new ValidationException(['message' => $this->translator->trans('mattoid-daily-check-in-history.api.error.span-day-checkin', ['date' => $checkinDate])]);
         }
         $yesterday = date('Y-m-d',strtotime("-1 days",strtotime($checkinDate)));
@@ -162,10 +161,7 @@ class PostCheckinHistoryController extends AbstractCreateController
             $supplementaryCheckinCount ++;
         }
 
-
-
         $history = $this->events->dispatch(new SupplementaryCheckinEvent($actor, $checkinDate, $totalContinuousCheckinCountHistory, $supplementaryCheckinCount));
-
-        return $history;
+        return reset($history);
     }
 }
