@@ -12,7 +12,7 @@ class UserAttributes
         $attributes = [];
         $actor = $serializer->getActor();
 
-        $attributes['checkinCard'] = $actor->checkin_card;
+        $attributes['checkinCard'] = $user->checkin_card;
         $attributes['canQueryOthersHistory'] = $serializer->getActor()->can('queryOthersHistory', $user);
 
         return $attributes;
