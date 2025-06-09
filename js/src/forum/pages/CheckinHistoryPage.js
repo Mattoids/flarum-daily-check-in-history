@@ -18,6 +18,17 @@ export default class CheckinHistoryPage extends UserPage {
       return (
         <div className="CheckinHistoryUserPage">
           <div id="calendar" />
+
+          {this.loading && (
+            <div class="DiscussionList">
+              <div class="DiscussionList-loadMore">
+                <div aria-label="loading…" role="status" data-size="medium"
+                     class="LoadingIndicator-container LoadingIndicator-container--block LoadingIndicator-container--medium">
+                  <div aria-hidden="true" class="LoadingIndicator"></div>
+                </div>
+              </div>
+            </div>
+          )}
         </div>
       );
     }
@@ -49,7 +60,7 @@ export default class CheckinHistoryPage extends UserPage {
   }
 
   async getData(info, successCb, failureCb) {
-    console.log(this.user.id())
+    this.loading = true;
     this.history = await app.store.find('checkin/history', {
       start: info.start.toISOString(),
       end: info.end.toISOString(),
@@ -58,6 +69,7 @@ export default class CheckinHistoryPage extends UserPage {
     });
 
     return this.history.payload.data.map((item) => {
+      this.loading = false;
       return item.attributes;
     });
   }
